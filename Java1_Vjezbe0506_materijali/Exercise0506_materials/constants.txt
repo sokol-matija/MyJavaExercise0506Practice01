@@ -1,0 +1,16 @@
+private static final String SERVER_NAME = "localhost";
+private static final String DATABASE_NAME = "STUDENTS";
+private static final String USER = "sas";
+private static final String PASSWORD = "SQL";
+
+private static final String ID_STUDENT = "IDStudent";
+private static final String FIRST_NAME = "FirstName";
+private static final String LAST_NAME = "LastName";
+private static final String GRADE = "Grade";
+private static final String PICTURE_PATH = "PicturePath";
+
+private static final String CREATE_STUDENT = "{ CALL createStudent (?,?,?,?,?) }";
+private static final String UPDATE_STUDENT = "{ CALL updateStudent (?,?,?,?,?) }";
+private static final String DELETE_STUDENT = "{ CALL deleteStudent (?) }";
+private static final String SELECT_STUDENT = "{ CALL selectStudent (?) }";
+private static final String SELECT_STUDENTS = "{ CALL selectStudents }";
