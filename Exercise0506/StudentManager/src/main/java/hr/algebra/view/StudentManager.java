@@ -137,6 +137,11 @@ public class StudentManager extends javax.swing.JFrame {
         btnDelete.setBackground(new java.awt.Color(255, 51, 51));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Delete");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -303,10 +308,26 @@ public class StudentManager extends javax.swing.JFrame {
             model.setStudents(repository.selectStudents());
             clearForm();
         } catch (Exception ex) {
-            MessageUtils.showErrorMessage("Error", "Unable to create");
+            MessageUtils.showErrorMessage("Error", "Unable to update");
             Logger.getLogger(StudentManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        if (selectedID == 0) {
+            MessageUtils.showInfoMessage("Info", "Selected student");
+            return;
+        }
+
+        try {
+            repository.deleteStudent(selectedID);
+            model.setStudents(repository.selectStudents());
+            clearForm();
+        } catch (Exception ex) {
+            MessageUtils.showErrorMessage("Error", "Unable to delete");
+            Logger.getLogger(StudentManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
