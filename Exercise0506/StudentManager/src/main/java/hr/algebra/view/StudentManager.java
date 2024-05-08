@@ -7,6 +7,7 @@ package hr.algebra.view;
 import hr.algebra.dal.Repository;
 import hr.algebra.dal.RepositoryFactory;
 import hr.algebra.model.Grade;
+import hr.algebra.model.Student;
 import hr.algebra.utilities.FileUtils;
 import hr.algebra.utilities.IconUtils;
 import hr.algebra.utilities.MessageUtils;
@@ -115,6 +116,11 @@ public class StudentManager extends javax.swing.JFrame {
         });
 
         btnAdd.setText("Add");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnUpdate.setText("Update");
 
@@ -218,15 +224,35 @@ public class StudentManager extends javax.swing.JFrame {
 
     private void btnChooseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseActionPerformed
         File file = FileUtils.uploadFile(
-                "Images", 
+                "Images",
                 "png", "jpg", "jpeg");
         if (file == null) {
             return;
         }
         tfPath.setText(file.getAbsolutePath());
         setIcon(lbIcon, file);
-        
+
     }//GEN-LAST:event_btnChooseActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if (!formValid()) {
+            return;
+        }
+        Student student = new Student(
+                tfFirst.getText().trim(),
+                tfLast.getText().trim(),
+                (Grade) cbGrades.getSelectedItem(),
+                tfPath.getText()
+        );
+        try {
+            repository.createStudent(student);
+            model.setStudents(repository.selectStudents());
+            clearForm();
+        } catch (Exception ex) {
+            MessageUtils.showErrorMessage("Error", "Unable to create");
+            Logger.getLogger(StudentManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
 
     /**
      * @param args the command line arguments
@@ -235,7 +261,7 @@ public class StudentManager extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -330,7 +356,7 @@ public class StudentManager extends javax.swing.JFrame {
     private Repository repository;
     private StudentTableModel model;
     private int selectectedId;
-    
+
     private void init() {
         try {
             initValidation();
@@ -338,11 +364,11 @@ public class StudentManager extends javax.swing.JFrame {
             initGrades();
             initRepo();
             initTable();
-            
+
         } catch (Exception e) {
             MessageUtils.showErrorMessage("Error", "Fatal");
             System.exit(0);
-            
+
         }
     }
 
@@ -363,6 +389,13 @@ public class StudentManager extends javax.swing.JFrame {
 
         model = new StudentTableModel(repository.selectStudents());
         tbStudents.setModel(model);
-        
+
+    }
+
+    private void clearForm() {
+        hideErrors();
+        validationFields.forEach(f -> f.setText(""));
+        cbGrades.setSelectedIndex(0);
+        lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no_image.jpeg")));
     }
 }
