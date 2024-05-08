@@ -128,6 +128,11 @@ public class StudentManager extends javax.swing.JFrame {
         });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         btnDelete.setBackground(new java.awt.Color(255, 51, 51));
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
@@ -278,6 +283,31 @@ public class StudentManager extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tbStudentsMouseClicked
 
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        if (selectedID == 0) {
+            MessageUtils.showInfoMessage("Info", "Selected student");
+            return;
+        }
+
+        if (!formValid()) {
+            return;
+        }
+        Student student = new Student(
+                tfFirst.getText().trim(),
+                tfLast.getText().trim(),
+                (Grade) cbGrades.getSelectedItem(),
+                tfPath.getText()
+        );
+        try {
+            repository.updateStudent(selectedID, student);
+            model.setStudents(repository.selectStudents());
+            clearForm();
+        } catch (Exception ex) {
+            MessageUtils.showErrorMessage("Error", "Unable to create");
+            Logger.getLogger(StudentManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -421,6 +451,7 @@ public class StudentManager extends javax.swing.JFrame {
         validationFields.forEach(f -> f.setText(""));
         cbGrades.setSelectedIndex(0);
         lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no_image.jpeg")));
+        selectedID = 0;
     }
 
     private void fillForm(Student student) {
