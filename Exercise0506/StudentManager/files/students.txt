@@ -1,1 +1,2 @@
 1;milica;krmpotic;5;C:\Users\msokol\Pictures\colemak_dh_main_matrix.png
+2;ana;badoo;4;C:\Users\msokol\Pictures\Logo\logo1.jpg

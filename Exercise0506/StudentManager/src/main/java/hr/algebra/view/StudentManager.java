@@ -83,6 +83,11 @@ public class StudentManager extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbStudents.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbStudentsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbStudents);
 
         lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no_image.jpeg"))); // NOI18N
@@ -254,6 +259,25 @@ public class StudentManager extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
+    private void tbStudentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbStudentsMouseClicked
+        int selectedRow = tbStudents.getSelectedRow();
+
+        int rowIndex = tbStudents.convertRowIndexToModel(selectedRow);
+
+        selectedID = (int) model.getValueAt(rowIndex, 0);
+
+        try {
+            Student student = repository.selectStudent(selectedID);
+            if (student != null) {
+                fillForm(student);
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(StudentManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_tbStudentsMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -355,7 +379,7 @@ public class StudentManager extends javax.swing.JFrame {
 
     private Repository repository;
     private StudentTableModel model;
-    private int selectectedId;
+    private int selectedID;
 
     private void init() {
         try {
@@ -397,5 +421,14 @@ public class StudentManager extends javax.swing.JFrame {
         validationFields.forEach(f -> f.setText(""));
         cbGrades.setSelectedIndex(0);
         lbIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/no_image.jpeg")));
+    }
+
+    private void fillForm(Student student) {
+        tfFirst.setText(student.getFirstName());
+        tfLast.setText(student.getLastName());
+        tfPath.setText(student.getPicturePath());
+        cbGrades.setSelectedItem((student.getGrade()));
+        setIcon(lbIcon, new File(student.getPicturePath()));
+
     }
 }
